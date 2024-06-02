@@ -75,12 +75,12 @@
         }
 
         $('#startBtn').click(function() {
-            fetchSignalData(); // Fetch data immediately
-            fetchInterval = setInterval(fetchSignalData, 1000); // Start fetching data every 5 seconds
+            fetchSignalData();
+            fetchInterval = setInterval(fetchSignalData, 1000);
         });
 
         $('#stopBtn').click(function() {
-            clearInterval(fetchInterval); // Stop fetching data
+            clearInterval(fetchInterval);
         });
     </script>
 </body>
