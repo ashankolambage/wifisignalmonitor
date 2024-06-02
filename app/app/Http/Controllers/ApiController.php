@@ -10,23 +10,20 @@ class ApiController extends Controller
 {
     public function getSignalData()
     {
-        $url = 'http://192.168.8.1/cgi-bin/lua.cgi';
-        $url2 = 'http://192.168.8.1/reqproc/proc_get?isTest=false&cmd=system_status';
-
         $routerType = "outdoor";
-
-        $postData = [
-            'cmd' => 250,
-            'method' => 'GET',
-            'sessionId' => ''
-        ];
 
         try {
             if ($routerType == "huawei") {
-                Log::info(__LINE__);
-                $response = Http::post($url, $postData);
-            }elseif ($routerType == "outdoor") {
-                Log::info(__LINE__);
+
+                $postData = [
+                    'cmd' => 250,
+                    'method' => 'GET',
+                    'sessionId' => ''
+                ];
+
+                $response = Http::post('http://192.168.8.1/cgi-bin/lua.cgi', $postData);
+            } elseif ($routerType == "outdoor") {
+
                 $response = Http::get('http://192.168.8.1/reqproc/proc_get', [
                     'isTest' => 'false',
                     'cmd' => 'system_status'
@@ -35,10 +32,9 @@ class ApiController extends Controller
             
 
             if ($response->successful()) {
-                $data = $response->json();
-
                 if ($routerType == "huawei") {
-                    Log::info(__LINE__);
+                    $data = $response->json();
+
                     $filteredData = [
                         'modem_rsrp' => 150 + $data['data']['main_info']['modem_rsrp'] ?? 0,
                         'modem_rssi' => 150 + $data['data']['main_info']['modem_rssi'] ?? 0,
@@ -57,24 +53,28 @@ class ApiController extends Controller
                         'modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
                         'modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
                     ];
-                }elseif ($routerType == "outdoor") {
+                } elseif ($routerType == "outdoor") {
                     $data = json_decode($response, true);
 
-
-                    $rsrq = $data['rsrq'];
-                    $rsrp = $data['rsrp'];
-                    $rssi = $data['rssi'];
-                    $sinr = $data['sinr'];
-
-                    Log::info("RSRQ: $rsrq");
-                    Log::info("RSRP: $rsrp");
-                    Log::info("RSSI: $rssi");
-                    Log::info("SINR: $sinr");
-                    
-                    Log::info("######");
+                    $filteredData = [
+                        'modem_rsrp' => 150 + $data['rsrp'] ?? 0,
+                        'modem_rssi' => 150 + $data['rssi'] ?? 0,
+                        'modem_rsrq' => 150 + $data['rsrq'] ?? 0,
+                        'modem_sinr' => $data['sinr'] *10 ?? 0,
+    
+                        'raw_modem_rsrp' => $data['rsrp'] ?? 0,
+                        'raw_modem_rssi' => $data['rssi'] ?? 0,
+                        'raw_modem_rsrq' => $data['rsrq'] ?? 0,
+                        'raw_modem_sinr' => $data['sinr'] ?? 0,
+                    ];
+    
+                    $filteredRawData = [
+                        'modem_rsrp' => $data['rsrp'] ?? 0,
+                        'modem_rssi' => $data['rssi'] ?? 0,
+                        'modem_rsrq' => $data['rsrq'] ?? 0,
+                        'modem_sinr' => $data['sinr'] ?? 0,
+                    ];
                 }
-
-                dd("end");
 
                 Log::info(json_encode($filteredRawData));
                 return response()->json($filteredData);
