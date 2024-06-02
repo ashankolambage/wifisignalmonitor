@@ -21,3 +21,6 @@ Route::get('/', function () {
 
 
 Route::get('/signal-data', [ApiController::class, 'getSignalData']);
+Route::get('/signal', function () {
+    return view('signal');
+});
