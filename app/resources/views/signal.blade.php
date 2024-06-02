@@ -6,11 +6,42 @@
     <title>Signal Data</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
     <div>
         <canvas id="signalChart" width="150" height="60"></canvas>
     </div>
+
+    <div id="dataValues" class="data-values-container">
+        <p>RSRP: <span id="rsrpValue">0</span></p>
+        <p>RSSI: <span id="rssiValue">0</span></p>
+        <p>RSRQ: <span id="rsrqValue">0</span></p>
+        <p>SINR: <span id="sinrValue">0</span></p>
+    </div>
+
+    <style>
+        .data-values-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        .data-values-container p {
+            flex: 0 0 calc(25% - 10px); /* Adjust the width of each data value */
+            margin-bottom: 10px; /* Add margin between each row */
+        }
+
+        @media only screen and (max-width: 600px) {
+            .data-values-container p {
+                flex: 0 0 calc(50% - 10px); /* Adjust width for smaller screens */
+            }
+        }
+
+    </style>
+
     <div>
         <button id="startBtn">Start Fetching</button>
         <button id="stopBtn">Stop Fetching</button>
@@ -45,7 +76,7 @@
                     y: {
                         beginAtZero: true
                     }
-                }
+                },
             }
         });
     
@@ -58,6 +89,11 @@
                 data.modem_sinr
             ];
             signalChart.update();
+
+            $('#rsrpValue').text(data.modem_rsrp);
+            $('#rssiValue').text(data.modem_rssi);
+            $('#rsrqValue').text(data.modem_rsrq);
+            $('#sinrValue').text(data.modem_sinr);
         }
     
         // Function to fetch signal data from the server
