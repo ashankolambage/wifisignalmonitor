@@ -26,16 +26,16 @@
                     label: 'Signal Data',
                     data: [0, 0, 0, 0],
                     backgroundColor: [
-                        'rgba(0, 255, 0, 0.5)', // Green for Excellent
-                        'rgba(255, 255, 0, 0.5)', // Yellow for Good
+                        'rgba(255, 0, 0, 0.5)', // Red for Poor
                         'rgba(255, 165, 0, 0.5)', // Orange for Fair
-                        'rgba(255, 0, 0, 0.5)' // Red for Poor
+                        'rgba(255, 255, 0, 0.5)', // Yellow for Good
+                        'rgba(0, 255, 0, 0.5)' // Green for Excellent
                     ],
                     borderColor: [
-                        'rgba(0, 255, 0, 1)',
-                        'rgba(255, 255, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
                         'rgba(255, 165, 0, 1)',
-                        'rgba(255, 0, 0, 1)'
+                        'rgba(255, 255, 0, 1)',
+                        'rgba(0, 255, 0, 1)'
                     ],
                     borderWidth: 1
                 }]
