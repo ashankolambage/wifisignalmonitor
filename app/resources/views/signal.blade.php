@@ -11,6 +11,10 @@
     <div>
         <canvas id="signalChart" width="400" height="200"></canvas>
     </div>
+    <div>
+        <button id="startBtn">Start Fetching</button>
+        <button id="stopBtn">Stop Fetching</button>
+    </div>
 
     <script>
         const ctx = document.getElementById('signalChart').getContext('2d');
@@ -45,6 +49,8 @@
             }
         });
 
+        let fetchInterval;
+
         function updateChart(data) {
             signalChart.data.datasets[0].data = [
                 data.modem_rsrp,
@@ -68,9 +74,14 @@
             });
         }
 
-        // Fetch signal data initially and then every 5 seconds
-        fetchSignalData();
-        setInterval(fetchSignalData, 1000);
+        $('#startBtn').click(function() {
+            fetchSignalData(); // Fetch data immediately
+            fetchInterval = setInterval(fetchSignalData, 1000); // Start fetching data every 5 seconds
+        });
+
+        $('#stopBtn').click(function() {
+            clearInterval(fetchInterval); // Stop fetching data
+        });
     </script>
 </body>
 </html>
