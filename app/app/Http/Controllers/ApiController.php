@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
+    private $maxIterations = 20;
+
     public function getSignalData()
     {
+        $this->fetchAndLogSignalData(0);
+    }
+
+    private function fetchAndLogSignalData($iteration)
+    {
+        if ($iteration >= $this->maxIterations) {
+            Log::info('Reached max iterations.');
+            return;
+        }
+
         $url = 'http://192.168.8.1/cgi-bin/lua.cgi';
 
         $postData = [
@@ -30,29 +42,14 @@ class ApiController extends Controller
                     'modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? null,
                 ];
 
-                // Log the filtered data
                 Log::info('Filtered API Response: ' . json_encode($filteredData));
-
-                // Optionally return the filtered data
-                return response()->json([
-                    'status' => 'success',
-                    'data' => $filteredData,
-                ]);
             } else {
                 Log::error('API Request failed with status ' . $response->status());
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'API request failed',
-                ], $response->status());
             }
         } catch (\Exception $e) {
             Log::error('API Request exception: ' . $e->getMessage());
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while making the API request',
-            ], 500);
         }
+
+        $this->fetchAndLogSignalData($iteration + 1);
     }
 }
