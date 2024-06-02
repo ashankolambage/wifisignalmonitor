@@ -1,0 +1,53 @@
+version: '3'
+services:
+ wifisignalmonitor-mysql:
+  image: mysql:8.0.24
+  platform: linux/amd64
+  env_file:
+   - ./env/mysql.env
+  ports:
+   - $MYSQL_PORT:3306
+  volumes:
+   - ./vols/mysql/data/:/var/lib/mysql/
+  user: $UID:$UID
+ wifisignalmonitor-adminer:
+  image: adminer:4.8.0-standalone
+  env_file:
+   - ./env/adminer.env
+  ports:
+   - $ADMINER_PORT:8080
+ wifisignalmonitor-mailhog:
+  image: mailhog/mailhog:v1.0.1
+  platform: linux/amd64
+  ports:
+   - $MAILHOG_SMTP_PORT:1025
+   - $MAILHOG_UI_PORT:8025
+ wifisignalmonitor-app:
+  image: $APP_IMAGE
+  build:
+   context: .
+   dockerfile: ./Dockerfiles/app.Dockerfile
+   args:
+    UID: $UID
+  volumes:
+   - $APP_VOLUMES_SRC:/var/www/html/
+   - ./vols/app/docker-user-home/:/home/www-data/
+  env_file:
+   - ./env/app.env
+  environment: 
+   - APP_VERSION=dev
+  ports:
+  - $VITE_HOST_PORT:5173
+ wifisignalmonitor-static:
+  image: nginx:1.19.6-alpine
+  volumes:
+   - $STATIC_VOLUMES_PUBLIC:/usr/share/nginx/html/
+ wifisignalmonitor-proxy:
+  image: $PROXY_IMAGE
+  build:
+   context: .
+   dockerfile: ./Dockerfiles/proxy.Dockerfile
+  ports:
+   - $PROXY_PORT:80
+  env_file:
+    - ./env/proxy.env
