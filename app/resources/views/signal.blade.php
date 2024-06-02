@@ -20,6 +20,13 @@
         <p>SINR: <span id="sinrValue">0</span></p>
     </div>
 
+    <div id="dataValues" class="data-values-container">
+        <p>RSRP: <span id="">-65 dBm above</span></p>
+        <p>RSSI: <span id="">-50 dBm above</span></p>
+        <p>RSRQ: <span id=""> -3 dB to -6 dB</span></p>
+        <p>SINR: <span id=""> 25 dB and above</span></p>
+    </div>
+
     <style>
         .data-values-container {
             display: flex;
