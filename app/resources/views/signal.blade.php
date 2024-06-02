@@ -45,9 +45,11 @@
     <div>
         <button id="startBtn">Start Fetching</button>
         <button id="stopBtn">Stop Fetching</button>
+        <p>Total Requests: <span id="requestCount">0</span></p>
     </div>
 
     <script>
+        let requestCounter = 0;
         const ctx = document.getElementById('signalChart').getContext('2d');
         const signalChart = new Chart(ctx, {
             type: 'bar',
@@ -103,6 +105,9 @@
                 method: 'GET',
                 success: function (data) {
                     updateChart(data);
+                    
+                    requestCounter++;
+                    $('#requestCount').text(requestCounter);
                 },
                 error: function (error) {
                     console.error('Error fetching signal data:', error);
