@@ -11,6 +11,15 @@ class ApiController extends Controller
     public function getSignalData()
     {
         $url = 'http://192.168.8.1/cgi-bin/lua.cgi';
+        $url2 = 'http://192.168.8.1/reqproc/proc_get?isTest=false&cmd=system_status&_=1717323398508';
+
+        $routeType = "huawei";
+
+        if ($routeType = "huawei") {
+            # code...
+        }elseif ($routeType = "outdoor") {
+            # code...
+        }
 
         $postData = [
             'cmd' => 250,
@@ -19,28 +28,38 @@ class ApiController extends Controller
         ];
 
         try {
-            $response = Http::post($url, $postData);
+            if ($routeType = "huawei") {
+                $response = Http::post($url, $postData);
+            }elseif ($routeType = "outdoor") {
+                $response = Http::post($url2);
+            }
+            
 
             if ($response->successful()) {
                 $data = $response->json();
-                $filteredData = [
-                    'modem_rsrp' => 150 + $data['data']['main_info']['modem_rsrp'] ?? 0,
-                    'modem_rssi' => 150 + $data['data']['main_info']['modem_rssi'] ?? 0,
-                    'modem_rsrq' => 150 + $data['data']['main_info']['modem_rsrq'] ?? 0,
-                    'modem_sinr' => $data['data']['main_info']['modem_sinr'] *10 ?? 0,
 
-                    'raw_modem_rsrp' => $data['data']['main_info']['modem_rsrp'] ?? 0,
-                    'raw_modem_rssi' => $data['data']['main_info']['modem_rssi'] ?? 0,
-                    'raw_modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
-                    'raw_modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
-                ];
-
-                $filteredRawData = [
-                    'modem_rsrp' => $data['data']['main_info']['modem_rsrp'] ?? 0,
-                    'modem_rssi' => $data['data']['main_info']['modem_rssi'] ?? 0,
-                    'modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
-                    'modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
-                ];
+                if ($routeType = "huawei") {
+                    $filteredData = [
+                        'modem_rsrp' => 150 + $data['data']['main_info']['modem_rsrp'] ?? 0,
+                        'modem_rssi' => 150 + $data['data']['main_info']['modem_rssi'] ?? 0,
+                        'modem_rsrq' => 150 + $data['data']['main_info']['modem_rsrq'] ?? 0,
+                        'modem_sinr' => $data['data']['main_info']['modem_sinr'] *10 ?? 0,
+    
+                        'raw_modem_rsrp' => $data['data']['main_info']['modem_rsrp'] ?? 0,
+                        'raw_modem_rssi' => $data['data']['main_info']['modem_rssi'] ?? 0,
+                        'raw_modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
+                        'raw_modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
+                    ];
+    
+                    $filteredRawData = [
+                        'modem_rsrp' => $data['data']['main_info']['modem_rsrp'] ?? 0,
+                        'modem_rssi' => $data['data']['main_info']['modem_rssi'] ?? 0,
+                        'modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
+                        'modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
+                    ];
+                }elseif ($routeType = "outdoor") {
+                    Log::info(json_encode($response));
+                }
 
                 Log::info(json_encode($filteredRawData));
                 return response()->json($filteredData);
