@@ -10,7 +10,7 @@
 </head>
 <body>
     <div>
-        <canvas id="signalChart" width="150" height="60"></canvas>
+        <canvas id="signalChart" width="150" height="200"></canvas>
     </div>
 
     <div id="dataValues" class="data-values-container">
@@ -90,10 +90,10 @@
             ];
             signalChart.update();
 
-            $('#rsrpValue').text(data.modem_rsrp);
-            $('#rssiValue').text(data.modem_rssi);
-            $('#rsrqValue').text(data.modem_rsrq);
-            $('#sinrValue').text(data.modem_sinr);
+            $('#rsrpValue').text(data.raw_modem_rsrp);
+            $('#rssiValue').text(data.raw_modem_rssi);
+            $('#rsrqValue').text(data.raw_modem_rsrq);
+            $('#sinrValue').text(data.raw_modem_sinr);
         }
     
         // Function to fetch signal data from the server

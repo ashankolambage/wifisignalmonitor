@@ -28,6 +28,11 @@ class ApiController extends Controller
                     'modem_rssi' => 150 + $data['data']['main_info']['modem_rssi'] ?? 0,
                     'modem_rsrq' => 150 + $data['data']['main_info']['modem_rsrq'] ?? 0,
                     'modem_sinr' => $data['data']['main_info']['modem_sinr'] *10 ?? 0,
+
+                    'raw_modem_rsrp' => $data['data']['main_info']['modem_rsrp'] ?? 0,
+                    'raw_modem_rssi' => $data['data']['main_info']['modem_rssi'] ?? 0,
+                    'raw_modem_rsrq' => $data['data']['main_info']['modem_rsrq'] ?? 0,
+                    'raw_modem_sinr' => $data['data']['main_info']['modem_sinr'] ?? 0,
                 ];
 
                 $filteredRawData = [
