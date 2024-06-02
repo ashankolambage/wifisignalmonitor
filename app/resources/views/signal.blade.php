@@ -41,11 +41,15 @@
                 }]
             },
             options: {
+                indexAxis: 'y',
                 scales: {
+                    x: {
+                        stacked: true,
+                    },
                     y: {
-                        beginAtZero: true
+                        stacked: true,
                     }
-                }
+                },
             }
         });
 
