@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signal Data</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div>
-        <canvas id="signalChart"></canvas>
+        <canvas id="signalChart" width="400" height="200"></canvas>
     </div>
 
     <script>
@@ -19,7 +20,7 @@
                 labels: ['modem_rsrp', 'modem_rssi', 'modem_rsrq', 'modem_sinr'],
                 datasets: [{
                     label: 'Signal Data',
-                    data: [],
+                    data: [0, 0, 0, 0],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -54,18 +55,22 @@
             signalChart.update();
         }
 
-        async function fetchSignalData() {
-            try {
-                const response = await fetch('/signal-data');
-                const data = await response.json();
-                data.forEach(updateChart);
-            } catch (error) {
-                console.error('Error fetching signal data:', error);
-            }
+        function fetchSignalData() {
+            $.ajax({
+                url: '/signal-data',
+                method: 'GET',
+                success: function (data) {
+                    updateChart(data);
+                },
+                error: function (error) {
+                    console.error('Error fetching signal data:', error);
+                }
+            });
         }
 
-        // Fetch signal data when the page loads
-        window.onload = fetchSignalData;
+        // Fetch signal data initially and then every 5 seconds
+        fetchSignalData();
+        setInterval(fetchSignalData, 1000);
     </script>
 </body>
 </html>
