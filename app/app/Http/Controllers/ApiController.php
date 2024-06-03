@@ -26,8 +26,10 @@ class ApiController extends Controller
 
                 $response = Http::get('http://192.168.8.1/reqproc/proc_get', [
                     'isTest' => 'false',
-                    'cmd' => 'system_status'
+                    'cmd' => 'system_status%Cweb_signal'
                 ]);
+
+                dd($response);
             }
 
             if ($response->successful()) {
