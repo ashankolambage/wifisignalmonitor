@@ -18,6 +18,7 @@
         <p>RSSI: <span id="rssiValue">0</span></p>
         <p>RSRQ: <span id="rsrqValue">0</span></p>
         <p>SINR: <span id="sinrValue">0</span></p>
+        <p>Signal Level: <span id="signallevel">0</span></p>
     </div>
 
     <div id="dataValues" class="data-values-container">
@@ -103,6 +104,7 @@
             $('#rssiValue').text(data.raw_modem_rssi);
             $('#rsrqValue').text(data.raw_modem_rsrq);
             $('#sinrValue').text(data.raw_modem_sinr);
+            $('#signallevel').text(data.web_signal);
         }
     
         // Function to fetch signal data from the server

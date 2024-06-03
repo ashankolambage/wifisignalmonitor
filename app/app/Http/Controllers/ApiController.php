@@ -26,10 +26,13 @@ class ApiController extends Controller
 
                 $response = Http::get('http://192.168.8.1/reqproc/proc_get', [
                     'isTest' => 'false',
-                    'cmd' => 'system_status%Cweb_signal'
+                    'cmd' => 'system_status'
                 ]);
 
-                dd($response);
+                $signal = Http::get('http://192.168.8.1/reqproc/proc_get', [
+                    'isTest' => 'false',
+                    'cmd' => 'web_signal'
+                ]);
             }
 
             if ($response->successful()) {
@@ -60,6 +63,7 @@ class ApiController extends Controller
                         'raw_modem_rssi' => $data['rssi'] ?? 0,
                         'raw_modem_rsrq' => $data['rsrq'] ?? 0,
                         'raw_modem_sinr' => $data['sinr'] ?? 0,
+                        'web_signal' => $signal['web_signal'] ?? 0,
                     ];
                 }
 
